@@ -1,0 +1,6 @@
+name: 'protocol_positions'
+profile: 'protocol_positions'
+
+models:
+  protocol_positions:
+    materialized: table
