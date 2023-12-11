@@ -1,11 +1,12 @@
 from datetime import datetime
 
 from include.common.constants.index import PROTOCOLS
-from include.common.utils.bigquery import load_metadata, check_syncing_state
+from include.common.utils.operator_helpers.load_metadata import load_metadata
+from include.common.utils.operator_helpers.handle_execution import handle_execution
 
 from airflow.decorators import dag
+from airflow.utils.task_group import TaskGroup
 from airflow.operators.empty import EmptyOperator
-from airflow.operators.dagrun_operator import TriggerDagRunOperator
 
 
 @dag(
@@ -20,17 +21,14 @@ def operator():
 
     for protocol_id in PROTOCOLS:
         
-        _load_metadata = load_metadata(protocol_id)
+        with TaskGroup(group_id=f'{protocol_id}') as task_group:
+            
+            _load_metadata = load_metadata(dataset_id=protocol_id)
+            
+            _handle_execution = handle_execution(dataset_id=protocol_id)
+            
+            _load_metadata >> _handle_execution
         
-        _check_syncing_state = check_syncing_state(protocol_id)
-        
-        _run_dag = TriggerDagRunOperator(
-            task_id=f"run_{protocol_id}",
-            trigger_dag_id=protocol_id,
-        )
-        
-        _start >> _load_metadata >> _check_syncing_state 
-        _check_syncing_state >> [_run_dag, _finish]
-        _run_dag >> _finish
+        _start >> task_group >> _finish
 
 operator()

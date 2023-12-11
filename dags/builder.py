@@ -1,7 +1,8 @@
 import os
 from datetime import datetime
 
-from include.common.utils.bigquery import update_metadata, check_historical_backlog
+from include.common.utils.builder_helpers.update_metadata import update_metadata
+from include.common.utils.builder_helpers.check_historical_backlog import check_historical_backlog
 from include.dbt.cosmos_config import DBT_PROJECT_CONFIG, DBT_CONFIG
 from include.common.constants.index import PROTOCOLS
 
@@ -25,8 +26,6 @@ def builder(protocol_id):
         _start = EmptyOperator(task_id="start")
 
         _finish = EmptyOperator(task_id="finish", trigger_rule="none_failed")
-        
-        # TODO: read protocol's metadata from xcom and pass to Dbt 
                 
         _transform = DbtTaskGroup(
             group_id='transform',
