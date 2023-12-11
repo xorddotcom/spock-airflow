@@ -23,9 +23,9 @@ def operator():
         
         with TaskGroup(group_id=f'{protocol_id}') as task_group:
             
-            _load_metadata = load_metadata(dataset_id=protocol_id)
+            _load_metadata = load_metadata(protocol_id=protocol_id)
             
-            _handle_execution = handle_execution(dataset_id=protocol_id)
+            _handle_execution = handle_execution(protocol_id=protocol_id)
             
             _load_metadata >> _handle_execution
         

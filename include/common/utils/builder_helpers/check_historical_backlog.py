@@ -1,19 +1,19 @@
 from airflow.operators.python_operator import BranchPythonOperator
 
-def check_protocol_backlog(dataset_id):
+def check_protocol_backlog(protocol_id):
     has_backlog = False  
     
     if has_backlog:
-        return dataset_id
+        return protocol_id
     else:
         return 'finish'
     
-def check_historical_backlog(dataset_id, **kwargs):
+def check_historical_backlog(protocol_id, **kwargs):
     return BranchPythonOperator(
-        task_id=f'check_historical_backlog_{dataset_id}',
+        task_id=f'check_historical_backlog_{protocol_id}',
         python_callable=check_protocol_backlog,
         provide_context=True,
-        op_kwargs={'dataset_id': dataset_id},
+        op_kwargs={'protocol_id': protocol_id},
         **kwargs
     ) 
    

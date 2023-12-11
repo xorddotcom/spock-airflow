@@ -45,9 +45,9 @@ def builder(protocol_id):
             },
         )
         
-        _update_metadata = update_metadata(protocol_id)
+        _update_metadata = update_metadata(protocol_id=protocol_id)
 
-        _check_historical_backlog = check_historical_backlog(protocol_id)
+        _check_historical_backlog = check_historical_backlog(protocol_id=protocol_id)
 
         _run_again = TriggerDagRunOperator(
             task_id='run_again',
