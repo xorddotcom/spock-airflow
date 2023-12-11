@@ -3,6 +3,7 @@ from datetime import datetime
 
 from include.common.utils.builder_helpers.update_metadata import update_metadata
 from include.common.utils.builder_helpers.check_historical_backlog import check_historical_backlog
+from include.common.utils.builder_helpers.slack_notifications import notify_success, notify_failure
 from include.dbt.cosmos_config import DBT_PROJECT_CONFIG, DBT_CONFIG
 from include.common.constants.index import PROTOCOLS
 
@@ -19,13 +20,14 @@ def builder(protocol_id):
         dag_id = protocol_id,
         schedule = None,
         start_date = datetime(2023,1,1),
-        catchup = False
+        catchup = False,
+        on_failure_callback=notify_failure
     )
     def build():
 
         _start = EmptyOperator(task_id="start")
 
-        _finish = EmptyOperator(task_id="finish", trigger_rule="none_failed")
+        _finish = EmptyOperator(task_id="finish", trigger_rule="none_failed", on_success_callback=notify_success)
                 
         _transform = DbtTaskGroup(
             group_id='transform',
@@ -56,7 +58,7 @@ def builder(protocol_id):
     
         _start >> _transform >> _update_metadata >> _check_historical_backlog
         _check_historical_backlog >> [_run_again, _finish]
-    
+        
     new_dag = build()
 
     return new_dag
@@ -64,3 +66,6 @@ def builder(protocol_id):
 
 for protocol_id in PROTOCOLS:
     globals()[protocol_id] = builder(protocol_id)
+    
+    
+        
