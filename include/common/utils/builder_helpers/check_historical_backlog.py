@@ -1,19 +1,24 @@
+from datetime import datetime
+
 from airflow.operators.python_operator import BranchPythonOperator
 
-def check_protocol_backlog(protocol_id):
-    has_backlog = False  
+def check_protocol_backlog(last_block_timestamp):
+    last_block_timestamp = datetime.strptime(last_block_timestamp, '%Y-%m-%d %H:%M:%S')
+    current_timestamp = datetime.now()
     
-    if has_backlog:
-        return protocol_id
+    difference = abs((current_timestamp - last_block_timestamp).days)
+   
+    if difference >= 1:
+        return 'run_again'
     else:
-        return 'finish'
+        return 'update_syncing_status'
     
-def check_historical_backlog(protocol_id, **kwargs):
+def check_historical_backlog(last_block_timestamp, **kwargs):
     return BranchPythonOperator(
-        task_id=f'check_historical_backlog_{protocol_id}',
+        task_id=f'check_historical_backlog',
         python_callable=check_protocol_backlog,
         provide_context=True,
-        op_kwargs={'protocol_id': protocol_id},
+        op_kwargs={'last_block_timestamp': last_block_timestamp},
         **kwargs
     ) 
    
