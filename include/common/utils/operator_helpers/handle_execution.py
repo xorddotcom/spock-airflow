@@ -31,7 +31,9 @@ def handle_execution(protocol_id, **kwargs):
         _run = TriggerDagRunOperator(
             task_id="run",
             trigger_dag_id=protocol_id,
-            **kwargs
+            conf={
+                "last_block_timestamp": '2021-05-04 19:27:00'
+            }
         )
         
         # Dummy operator to indicate finishing the task group
