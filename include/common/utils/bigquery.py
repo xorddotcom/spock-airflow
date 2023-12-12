@@ -1,5 +1,7 @@
 from include.common.constants.index import GCP_CONN_ID
+
 from airflow.providers.google.cloud.operators.bigquery import BigQueryCreateEmptyDatasetOperator, BigQueryExecuteQueryOperator, BigQueryCreateEmptyTableOperator
+from google.cloud import bigquery
 
 def create_dataset(task_id, dataset_id, **kwargs):
     return BigQueryCreateEmptyDatasetOperator(
@@ -29,8 +31,10 @@ def create_table(task_id, dataset_id, table_id, table_schema, **kwargs):
         exists_ok= True,
         **kwargs
     )
-    
 
- 
-
+def execute_raw_query(sql):
+    client = bigquery.Client()
+    query_job = client.query(sql)
+    results = query_job.result()
+    return results
 

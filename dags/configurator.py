@@ -1,4 +1,6 @@
 from datetime import datetime, timedelta
+
+from include.common.utils.configurator_helpers.config_bigquery import config_bigquery
 from include.common.utils.connections import add_gcp_connection, add_slack_connection
 
 from airflow.decorators import dag
@@ -30,6 +32,8 @@ def configurator():
         provide_context=True,
     )
 
-    _start >> _create_GCP_connection >> _create_SLACK_connection >> _finish
+    _config_bigquery = config_bigquery()
+
+    _start >> _create_GCP_connection >> _create_SLACK_connection >> _config_bigquery >> _finish
 
 configurator()
