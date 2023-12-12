@@ -1,5 +1,3 @@
-import json
-
 def push_to_xcom(key, data, **kwargs):
     ti = kwargs['ti']
     ti.xcom_push(key=key, value=data)

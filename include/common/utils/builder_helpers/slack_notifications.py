@@ -1,4 +1,3 @@
-
 from airflow.providers.slack.operators.slack import SlackAPIPostOperator
 
 SLACK_CHANNEL='#spock-jenkins-notifications'

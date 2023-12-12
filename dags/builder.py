@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from include.common.utils.builder_helpers.update_metadata import update_last_block_timestamp, update_syncing_status
 from include.common.utils.builder_helpers.check_historical_backlog import check_historical_backlog
 from include.common.utils.builder_helpers.slack_notifications import notify_success, notify_failure
+from include.common.utils.xcom import push_to_xcom
 from include.dbt.cosmos_config import DBT_PROJECT_CONFIG, DBT_CONFIG
 from include.common.constants.index import PROTOCOLS
 
@@ -11,6 +12,7 @@ from airflow.decorators import dag
 from airflow.operators.empty import EmptyOperator
 from airflow.operators.python_operator import PythonOperator
 from airflow.operators.dagrun_operator import TriggerDagRunOperator
+from airflow.utils.trigger_rule import TriggerRule
 from cosmos.airflow.task_group import DbtTaskGroup
 from cosmos.config import RenderConfig, ExecutionConfig
 from cosmos.constants import LoadMode
@@ -25,8 +27,8 @@ def process_timestamps(**kwargs):
     print("last_block_timestamp: ", last_block_timestamp)
     print("next_block_timestamp: ", next_block_timestamp)
     
-    kwargs['ti'].xcom_push(key='last_block_timestamp', value=last_block_timestamp.strftime('%Y-%m-%d %H:%M:%S'))
-    kwargs['ti'].xcom_push(key='next_block_timestamp', value=next_block_timestamp.strftime('%Y-%m-%d %H:%M:%S'))
+    push_to_xcom(key='last_block_timestamp',value=last_block_timestamp.strftime('%Y-%m-%d %H:%M:%S'), **kwargs)
+    push_to_xcom(key='next_block_timestamp', value=next_block_timestamp.strftime('%Y-%m-%d %H:%M:%S'), **kwargs)
     
 
 def builder(protocol_id):
@@ -45,7 +47,7 @@ def builder(protocol_id):
 
         _finish = EmptyOperator(
             task_id="finish",
-            trigger_rule="none_failed",
+            trigger_rule=TriggerRule.NONE_FAILED,
             on_success_callback=notify_success
         )
         
@@ -84,7 +86,7 @@ def builder(protocol_id):
         _update_last_block_timestamp = update_last_block_timestamp(
             protocol_id=protocol_id,
             last_block_timestamp=next_block_timestamp,
-            trigger_rule="none_failed"
+            trigger_rule=TriggerRule.NONE_FAILED
         )
 
         _check_historical_backlog = check_historical_backlog(
@@ -102,7 +104,7 @@ def builder(protocol_id):
         _update_syncing_status = update_syncing_status(
             protocol_id=protocol_id,
             syncing_status=True,
-            trigger_rule="none_failed"
+            trigger_rule=TriggerRule.NONE_FAILED
         )
     
         _start >> _process_timestamps >> _transform >> _update_last_block_timestamp >> _check_historical_backlog

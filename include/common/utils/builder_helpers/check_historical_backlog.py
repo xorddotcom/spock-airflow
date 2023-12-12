@@ -13,6 +13,7 @@ def check_protocol_backlog(last_block_timestamp):
     else:
         return 'update_syncing_status'
     
+    
 def check_historical_backlog(last_block_timestamp, **kwargs):
     return BranchPythonOperator(
         task_id=f'check_historical_backlog',
