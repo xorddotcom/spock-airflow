@@ -1,11 +1,11 @@
 import json
 import os
 
-from include.common.constants.index import PROJECT_ID, PROTOCOL_POSITIONS_PATH
+from include.common.constants.index import PROJECT_ID, PROTOCOLS_PATH
 from include.common.utils.file_helpers import load_json_file
 
 def generate_parsers_udf_sql(project):
-    parser_directory = os.path.join(PROTOCOL_POSITIONS_PATH, project, 'parser')
+    parser_directory = os.path.join(PROTOCOLS_PATH, project, 'parser')
     dataset_id = f"p_{project}"
     sql = ''
 

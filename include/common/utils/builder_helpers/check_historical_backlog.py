@@ -1,8 +1,7 @@
 from datetime import datetime
-
 from airflow.operators.python_operator import BranchPythonOperator
 
-def check_protocol_backlog(last_block_timestamp):
+def compare_dates(last_block_timestamp):
     last_block_timestamp = datetime.strptime(last_block_timestamp, '%Y-%m-%d %H:%M:%S')
     current_timestamp = datetime.now()
     
@@ -17,7 +16,7 @@ def check_protocol_backlog(last_block_timestamp):
 def check_historical_backlog(last_block_timestamp, **kwargs):
     return BranchPythonOperator(
         task_id=f'check_historical_backlog',
-        python_callable=check_protocol_backlog,
+        python_callable=compare_dates,
         provide_context=True,
         op_kwargs={'last_block_timestamp': last_block_timestamp},
         **kwargs

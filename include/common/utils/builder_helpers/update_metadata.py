@@ -1,6 +1,5 @@
 from include.common.constants.index import PROJECT_ID, COMMON_DATASET
 from include.common.utils.bigquery import execute_query
-
 from airflow.utils.trigger_rule import TriggerRule
 
    

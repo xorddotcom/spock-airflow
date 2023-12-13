@@ -1,0 +1,65 @@
+{
+  "parser": {
+    "abi": {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint128",
+          "name": "liquidity",
+          "type": "uint128"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount0",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount1",
+          "type": "uint256"
+        }
+      ],
+      "name": "IncreaseLiquidity",
+      "type": "event"
+    },
+    "contract_address": "0xc36442b4a4522e871399cd717abdd847ab11fe88",
+    "topic": "0x3067048beee31b25b2f1681f88dac838c8bba36af25bfb2b7cf7473a5847e35f",
+    "type": "log"
+  },
+  "table": {
+    "dataset_name": "<INSERT_DATASET_NAME>",
+    "schema": [
+      {
+        "description": "",
+        "name": "tokenId",
+        "type": "STRING"
+      },
+      {
+        "description": "",
+        "name": "liquidity",
+        "type": "STRING"
+      },
+      {
+        "description": "",
+        "name": "amount0",
+        "type": "STRING"
+      },
+      {
+        "description": "",
+        "name": "amount1",
+        "type": "STRING"
+      }
+    ],
+    "table_description": "",
+    "table_name": "<TABLE_PREFIX>_event_IncreaseLiquidity"
+  }
+}

@@ -12,15 +12,14 @@ def notify_success(context):
             ),
         'color': '#90EE90'
     }]
-    
     _notify = SlackAPIPostOperator(
         task_id='success_notification',
         slack_conn_id='slack',
-        channel=SLACK_CHANNEL,  
+        channel=SLACK_CHANNEL,
+        icon_url='https://res.cloudinary.com/dalayuyv1/image/upload/v1702479633/download_l0fg4f.png',
         attachments=attachments,
         text=''
     )
-    
     return _notify.execute(context=context)
 
 def notify_failure(context): 
@@ -33,13 +32,12 @@ def notify_failure(context):
             ),
         'color': '#FF474C'
     }]
-    
     _notify = SlackAPIPostOperator(
         task_id='failure_notification',
         slack_conn_id='slack',
         channel=SLACK_CHANNEL,
+        icon_url='https://res.cloudinary.com/dalayuyv1/image/upload/v1702479633/download_l0fg4f.png',
         attachments=attachments,
         text=''
     )
-    
     return _notify.execute(context=context)

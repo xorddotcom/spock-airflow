@@ -3,7 +3,8 @@ from datetime import datetime, timedelta
 
 from include.common.utils.builder_helpers.update_metadata import update_last_block_timestamp, update_syncing_status
 from include.common.utils.builder_helpers.check_historical_backlog import check_historical_backlog
-from include.common.utils.builder_helpers.slack_notifications import notify_success, notify_failure
+from include.common.utils.slack_notifications import notify_success, notify_failure
+from include.soda.check import check
 from include.common.utils.xcom import push_to_xcom
 from include.dbt.cosmos_config import DBT_PROJECT_CONFIG, DBT_CONFIG
 from include.common.constants.index import PROTOCOLS
@@ -27,16 +28,16 @@ def process_timestamps(**kwargs):
     print("last_block_timestamp: ", last_block_timestamp)
     print("next_block_timestamp: ", next_block_timestamp)
     
-    push_to_xcom(key='last_block_timestamp',value=last_block_timestamp.strftime('%Y-%m-%d %H:%M:%S'), **kwargs)
-    push_to_xcom(key='next_block_timestamp', value=next_block_timestamp.strftime('%Y-%m-%d %H:%M:%S'), **kwargs)
+    push_to_xcom(key='last_block_timestamp', data=last_block_timestamp.strftime('%Y-%m-%d %H:%M:%S'), **kwargs)
+    push_to_xcom(key='next_block_timestamp', data=next_block_timestamp.strftime('%Y-%m-%d %H:%M:%S'), **kwargs)
     
 
 def builder(protocol_id):
     @dag(
         dag_id = protocol_id,
         schedule = None,
-        start_date = datetime(2023,1,1),
         catchup = False,
+        start_date = datetime(2023,1,1),
         on_failure_callback=notify_failure
     )
     def protocol_dag():
@@ -66,7 +67,7 @@ def builder(protocol_id):
             profile_config=DBT_CONFIG,
             render_config=RenderConfig(
                 load_method=LoadMode.DBT_LS,
-                select=[f'path:models/protocol_positions/{protocol_id}/transform']
+                select=[f'path:models/{protocol_id}/transform']
             ),
             execution_config=ExecutionConfig(
                 dbt_executable_path=f"{os.environ['AIRFLOW_HOME']}/dbt_venv/bin/dbt",
@@ -81,6 +82,11 @@ def builder(protocol_id):
                     }
                 )
             },
+        )
+        
+        _check_transform = check(
+            scan_name='check_transform',
+            protocol_id=protocol_id
         )
         
         _update_last_block_timestamp = update_last_block_timestamp(
@@ -107,7 +113,8 @@ def builder(protocol_id):
             trigger_rule=TriggerRule.NONE_FAILED
         )
     
-        _start >> _process_timestamps >> _transform >> _update_last_block_timestamp >> _check_historical_backlog
+        _start >> _process_timestamps >> _transform >> _check_transform 
+        _check_transform >> _update_last_block_timestamp >> _check_historical_backlog
         _check_historical_backlog >> [_run_again, _update_syncing_status]
         _update_syncing_status >> _finish
             

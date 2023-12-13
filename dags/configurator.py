@@ -12,8 +12,8 @@ start_date = datetime.now() + timedelta(seconds=1)
 @dag(
     dag_id='configurator',
     schedule='@once',
+    catchup=True,
     start_date=start_date,
-    catchup=True
 )
 def configurator():
     _start = EmptyOperator(task_id="start")
