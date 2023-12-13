@@ -44,7 +44,8 @@
       "type": "event"
     },
     "topic": "0x0c396cd989a39f4459b5fa1aed6a9a8dcdbc45908acfd67e028cd568da98982c",
-    "type": "log"
+    "type": "log",
+    "start_date": "2021-05-04 19:27:00 UTC"
   },
   "table": {
     "dataset_name": "<INSERT_DATASET_NAME>",

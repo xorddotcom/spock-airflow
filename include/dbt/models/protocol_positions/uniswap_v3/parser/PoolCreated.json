@@ -39,7 +39,8 @@
     },
     "contract_address": "0x1f98431c8ad98523631ae4a59f267346ea31f984",
     "topic": "0x783cca1c0412dd0d695e784568c96da2e9c22ff989357a2e8b1d9b2b4e6b7118",
-    "type": "log"
+    "type": "log",
+    "start_date": "2021-05-04 19:27:00 UTC"
   },
   "table": {
     "dataset_name": "<INSERT_DATASET_NAME>",

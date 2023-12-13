@@ -1,65 +1,65 @@
 {
-    "parser": {
-        "abi": {
-            "anonymous": false,
-            "inputs": [
-                {
-                    "indexed": true,
-                    "internalType": "address",
-                    "name": "recipient",
-                    "type": "address"
-                },
-                {
-                    "indexed": false,
-                    "internalType": "uint256",
-                    "name": "shares",
-                    "type": "uint256"
-                },
-                {
-                    "indexed": false,
-                    "internalType": "uint256",
-                    "name": "amount0",
-                    "type": "uint256"
-                },
-                {
-                    "indexed": false,
-                    "internalType": "uint256",
-                    "name": "amount1",
-                    "type": "uint256"
-                }
-            ],
-            "name": "Withdraw",
-            "type": "event"
+  "parser": {
+    "abi": {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "recipient",
+          "type": "address"
         },
-        "contract_address": "0x2e00b08a9131bc663ee80d267b67d2aa220da41d",
-        "field_mapping": {},
-        "type": "log"
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "shares",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount0",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount1",
+          "type": "uint256"
+        }
+      ],
+      "name": "Withdraw",
+      "type": "event"
     },
-    "table": {
-        "dataset_name": "<INSERT_DATASET_NAME>",
-        "schema": [
-            {
-                "description": "",
-                "name": "recipient",
-                "type": "STRING"
-            },
-            {
-                "description": "",
-                "name": "shares",
-                "type": "STRING"
-            },
-            {
-                "description": "",
-                "name": "amount0",
-                "type": "STRING"
-            },
-            {
-                "description": "",
-                "name": "amount1",
-                "type": "STRING"
-            }
-        ],
-        "table_description": "",
-        "table_name": "<TABLE_PREFIX>_event_Withdraw"
-    }
+    "contract_address": "0x2e00b08a9131bc663ee80d267b67d2aa220da41d",
+    "type": "log",
+    "start_date": "2022-04-11 09:40:19 UTC"
+  },
+  "table": {
+    "dataset_name": "<INSERT_DATASET_NAME>",
+    "schema": [
+      {
+        "description": "",
+        "name": "recipient",
+        "type": "STRING"
+      },
+      {
+        "description": "",
+        "name": "shares",
+        "type": "STRING"
+      },
+      {
+        "description": "",
+        "name": "amount0",
+        "type": "STRING"
+      },
+      {
+        "description": "",
+        "name": "amount1",
+        "type": "STRING"
+      }
+    ],
+    "table_description": "",
+    "table_name": "<TABLE_PREFIX>_event_Withdraw"
+  }
 }
