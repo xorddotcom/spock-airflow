@@ -1,4 +1,3 @@
-
 data_source uniswap_v3_core:
   type: bigquery
   connection:
@@ -14,4 +13,3 @@ soda_cloud:
   host: cloud.us.soda.io
   api_key_id: ${SODA_API_KEY_ID}
   api_key_secret: ${SODA_API_KEY_SECRET}
-      

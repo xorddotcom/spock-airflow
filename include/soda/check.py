@@ -1,7 +1,7 @@
 from airflow.decorators import task
   
 @task.external_python(python='/usr/local/airflow/soda_venv/bin/python')
-def check(scan_name, protocol_id):
+def check_transform(scan_name, protocol_id):
   import os
   from soda.scan import Scan
   

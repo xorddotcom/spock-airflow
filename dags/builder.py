@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from include.common.utils.builder_helpers.update_metadata import update_last_block_timestamp, update_syncing_status
 from include.common.utils.builder_helpers.check_historical_backlog import check_historical_backlog
 from include.common.utils.slack_notifications import notify_success, notify_failure
-from include.soda.check import check
+from include.soda.check import check_transform
 from include.common.utils.xcom import push_to_xcom
 from include.dbt.cosmos_config import DBT_PROJECT_CONFIG, DBT_CONFIG
 from include.common.constants.index import PROTOCOLS
@@ -84,7 +84,7 @@ def builder(protocol_id):
             },
         )
         
-        _check_transform = check(
+        _check_transform = check_transform(
             scan_name='check_transform',
             protocol_id=protocol_id
         )
@@ -115,7 +115,10 @@ def builder(protocol_id):
     
         _start >> _process_timestamps >> _transform >> _check_transform 
         _check_transform >> _update_last_block_timestamp >> _check_historical_backlog
+        
         _check_historical_backlog >> [_run_again, _update_syncing_status]
+        
+        _run_again >> _finish
         _update_syncing_status >> _finish
             
     _protocol_dag = protocol_dag()
