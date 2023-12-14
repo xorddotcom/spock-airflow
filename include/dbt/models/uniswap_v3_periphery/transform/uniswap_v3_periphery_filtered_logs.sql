@@ -1,4 +1,7 @@
-{{ config(materialized="table") }}
+{{ config(
+    materialized='table',
+    schema='uniswap_v3_periphery'
+)}}
 
 SELECT 
     {{ var("last_block_timestamp") }} AS last_block_timestamp,

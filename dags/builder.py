@@ -3,7 +3,9 @@ from datetime import datetime, timedelta
 
 from include.common.utils.builder_helpers.update_metadata import update_last_block_timestamp, update_syncing_status
 from include.common.utils.builder_helpers.check_historical_backlog import check_historical_backlog
-from include.common.utils.builder_helpers.slack_notifications import notify_success, notify_failure
+from include.common.utils.slack_notifications import notify_success, notify_failure
+from include.soda.check import check_transform
+from include.common.utils.xcom import push_to_xcom
 from include.dbt.cosmos_config import DBT_PROJECT_CONFIG, DBT_CONFIG
 from include.common.constants.index import PROTOCOLS
 
@@ -11,6 +13,7 @@ from airflow.decorators import dag
 from airflow.operators.empty import EmptyOperator
 from airflow.operators.python_operator import PythonOperator
 from airflow.operators.dagrun_operator import TriggerDagRunOperator
+from airflow.utils.trigger_rule import TriggerRule
 from cosmos.airflow.task_group import DbtTaskGroup
 from cosmos.config import RenderConfig, ExecutionConfig
 from cosmos.constants import LoadMode
@@ -25,16 +28,16 @@ def process_timestamps(**kwargs):
     print("last_block_timestamp: ", last_block_timestamp)
     print("next_block_timestamp: ", next_block_timestamp)
     
-    kwargs['ti'].xcom_push(key='last_block_timestamp', value=last_block_timestamp.strftime('%Y-%m-%d %H:%M:%S %Z'))
-    kwargs['ti'].xcom_push(key='next_block_timestamp', value=next_block_timestamp.strftime('%Y-%m-%d %H:%M:%S %Z'))
+    push_to_xcom(key='last_block_timestamp', data=last_block_timestamp.strftime('%Y-%m-%d %H:%M:%S %Z'), **kwargs)
+    push_to_xcom(key='next_block_timestamp', data=next_block_timestamp.strftime('%Y-%m-%d %H:%M:%S %Z'), **kwargs)
     
 
 def builder(protocol_id):
     @dag(
         dag_id = protocol_id,
         schedule = None,
-        start_date = datetime(2023,1,1),
         catchup = False,
+        start_date = datetime(2023,1,1),
         on_failure_callback=notify_failure
     )
     def protocol_dag():
@@ -45,7 +48,7 @@ def builder(protocol_id):
 
         _finish = EmptyOperator(
             task_id="finish",
-            trigger_rule="none_failed",
+            trigger_rule=TriggerRule.NONE_FAILED,
             on_success_callback=notify_success
         )
         
@@ -64,7 +67,7 @@ def builder(protocol_id):
             profile_config=DBT_CONFIG,
             render_config=RenderConfig(
                 load_method=LoadMode.DBT_LS,
-                select=[f'path:models/protocol_positions/{protocol_id}/transform']
+                select=[f'path:models/{protocol_id}/transform']
             ),
             execution_config=ExecutionConfig(
                 dbt_executable_path=f"{os.environ['AIRFLOW_HOME']}/dbt_venv/bin/dbt",
@@ -81,10 +84,15 @@ def builder(protocol_id):
             },
         )
         
+        _check_transform = check_transform(
+            scan_name='check_transform',
+            protocol_id=protocol_id
+        )
+        
         _update_last_block_timestamp = update_last_block_timestamp(
             protocol_id=protocol_id,
             last_block_timestamp=next_block_timestamp,
-            trigger_rule="none_failed"
+            trigger_rule=TriggerRule.NONE_FAILED
         )
 
         _check_historical_backlog = check_historical_backlog(
@@ -101,13 +109,16 @@ def builder(protocol_id):
         
         _update_syncing_status = update_syncing_status(
             protocol_id=protocol_id,
-            syncing_status=True,
-            trigger_rule="none_failed"
+            syncing_status=False,
+            trigger_rule=TriggerRule.NONE_FAILED
         )
     
-        _start >> _process_timestamps >> _transform >> _update_last_block_timestamp >> _check_historical_backlog
+        _start >> _process_timestamps >> _transform 
+        _transform >> _update_last_block_timestamp >> _check_historical_backlog
+        
         _check_historical_backlog >> [_run_again, _update_syncing_status]
-        _update_syncing_status >> _finish
+        
+        _update_syncing_status >> _check_transform >> _finish
             
     _protocol_dag = protocol_dag()
 

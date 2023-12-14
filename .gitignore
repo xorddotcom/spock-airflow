@@ -12,3 +12,5 @@ airflow.db
 
 include/gcp/service_account.json
 include/dbt/logs
+include/dbt/dbt_packages
+include/soda/configurations/*

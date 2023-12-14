@@ -1,7 +1,7 @@
 import json
 import os
 
-from include.common.constants.index import PROJECT_ID, PROTOCOL_POSITIONS_PATH
+from include.common.constants.index import PROJECT_ID, PROTOCOLS_PATH
 from include.common.utils.file_helpers import load_json_file
 from include.common.utils.template import get_common_sql_template, get_sql_template
 
@@ -36,7 +36,7 @@ def decode_parser(dataset_id, file_path):
             )
 
 def generate_parser_udfs_sql(protocol_id):
-    parser_directory = os.path.join(PROTOCOL_POSITIONS_PATH, protocol_id, 'parser')
+    parser_directory = os.path.join(PROTOCOLS_PATH, protocol_id, 'parser')
     dataset_id = f"p_{protocol_id}"
     sql = ''
 
@@ -47,7 +47,7 @@ def generate_parser_udfs_sql(protocol_id):
     return sql
 
 def generate_custom_udfs_sql(protocol_id):
-    sql_directory = os.path.join(PROTOCOL_POSITIONS_PATH, protocol_id, 'sql')
+    sql_directory = os.path.join(PROTOCOLS_PATH, protocol_id, 'sql')
     dataset_id = f"p_{protocol_id}"
     sql = ''
 

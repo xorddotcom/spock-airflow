@@ -35,7 +35,7 @@ def add_slack_connection():
         conn_type='slack',
         password=os.environ.get('SLACK_API_KEY'),
     )
-
+    
     session = settings.Session()
 
     #checking if connection exist

@@ -5,15 +5,15 @@
       "inputs": [
         {
           "indexed": true,
-          "internalType": "address",
-          "name": "recipient",
-          "type": "address"
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
         },
         {
           "indexed": false,
-          "internalType": "uint256",
-          "name": "shares",
-          "type": "uint256"
+          "internalType": "uint128",
+          "name": "liquidity",
+          "type": "uint128"
         },
         {
           "indexed": false,
@@ -28,24 +28,24 @@
           "type": "uint256"
         }
       ],
-      "name": "Withdraw",
+      "name": "DecreaseLiquidity",
       "type": "event"
     },
-    "contract_address": "0x2e00b08a9131bc663ee80d267b67d2aa220da41d",
-    "type": "log",
-    "start_date": "2022-04-11 09:40:19 UTC"
+    "contract_address": "0xc36442b4a4522e871399cd717abdd847ab11fe88",
+    "topic": "0x26f6a048ee9138f2c0ce266f322cb99228e8d619ae2bff30c67f8dcf9d2377b4",
+    "type": "log"
   },
   "table": {
     "dataset_name": "<INSERT_DATASET_NAME>",
     "schema": [
       {
         "description": "",
-        "name": "recipient",
+        "name": "tokenId",
         "type": "STRING"
       },
       {
         "description": "",
-        "name": "shares",
+        "name": "liquidity",
         "type": "STRING"
       },
       {
@@ -60,6 +60,6 @@
       }
     ],
     "table_description": "",
-    "table_name": "<TABLE_PREFIX>_event_Withdraw"
+    "table_name": "<TABLE_PREFIX>_event_DecreaseLiquidity"
   }
 }
