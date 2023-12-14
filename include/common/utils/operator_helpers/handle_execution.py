@@ -1,6 +1,6 @@
 from airflow.utils.task_group import TaskGroup
 from airflow.operators.empty import EmptyOperator
-from airflow.operators.python_operator import BranchPythonOperator
+from airflow.operators.python import BranchPythonOperator
 from airflow.operators.dagrun_operator import TriggerDagRunOperator
 
 # Function to check if protocol is in syncing state
@@ -11,7 +11,7 @@ def check(protocol_id):
         return f'{protocol_id}.handle_execution.run'
     else:
         return f'{protocol_id}.handle_execution.finish'
-
+    
 # Function to handle protocol execution
 def handle_execution(protocol_id, **kwargs):
     
@@ -25,14 +25,16 @@ def handle_execution(protocol_id, **kwargs):
             provide_context=True,
             op_kwargs={'protocol_id': protocol_id},
             **kwargs
-        ) 
+        )
+
+        last_block_timestamp = f"'{{{{ ti.xcom_pull(task_ids='{protocol_id}.load_metadata.check', key='protocol_metadata')['last_block_timestamp'] }}}}'"
         
-        # Trigger a DAG run for the protocol
+        # # Trigger a DAG run for the protocol
         _run = TriggerDagRunOperator(
             task_id="run",
             trigger_dag_id=protocol_id,
             conf={
-                "last_block_timestamp": '2021-05-04 19:27:00'
+                "last_block_timestamp": last_block_timestamp
             }
         )
         

@@ -19,14 +19,14 @@ from cosmos.constants import LoadMode
 def process_timestamps(**kwargs):
     last_block_timestamp_str = kwargs['dag_run'].conf.get('last_block_timestamp')
     
-    last_block_timestamp = datetime.strptime(last_block_timestamp_str, '%Y-%m-%d %H:%M:%S')
+    last_block_timestamp = datetime.strptime(last_block_timestamp_str.strip("'"), '%Y-%m-%d %H:%M:%S %Z')
     next_block_timestamp = last_block_timestamp.replace(hour=0, minute=0, second=0, microsecond=0) + timedelta(days=1)
     
     print("last_block_timestamp: ", last_block_timestamp)
     print("next_block_timestamp: ", next_block_timestamp)
     
-    kwargs['ti'].xcom_push(key='last_block_timestamp', value=last_block_timestamp.strftime('%Y-%m-%d %H:%M:%S'))
-    kwargs['ti'].xcom_push(key='next_block_timestamp', value=next_block_timestamp.strftime('%Y-%m-%d %H:%M:%S'))
+    kwargs['ti'].xcom_push(key='last_block_timestamp', value=last_block_timestamp.strftime('%Y-%m-%d %H:%M:%S %Z'))
+    kwargs['ti'].xcom_push(key='next_block_timestamp', value=next_block_timestamp.strftime('%Y-%m-%d %H:%M:%S %Z'))
     
 
 def builder(protocol_id):

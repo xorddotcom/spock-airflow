@@ -176,5 +176,7 @@ def load_metadata(protocol_id, **kwargs):
 
         _fetch >> _check
         _check >> [_create, _update, _finish]
+        _create >> _finish
+        _update >> _finish
 
     return task_group

@@ -8,7 +8,6 @@ from airflow.decorators import dag
 from airflow.utils.task_group import TaskGroup
 from airflow.operators.empty import EmptyOperator
 
-
 @dag(
     dag_id='operator',
     schedule_interval="@daily",
@@ -25,9 +24,9 @@ def operator():
             
             _load_metadata = load_metadata(protocol_id=protocol_id)
             
-            # _handle_execution = handle_execution(protocol_id=protocol_id)
+            _handle_execution = handle_execution(protocol_id=protocol_id)
             
-            # _load_metadata >> _handle_execution
+            _load_metadata >> _handle_execution
         
         _start >> task_group >> _finish
 
