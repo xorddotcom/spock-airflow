@@ -6,26 +6,14 @@
         {
           "indexed": true,
           "internalType": "address",
-          "name": "owner",
+          "name": "depositor",
           "type": "address"
         },
         {
           "indexed": true,
-          "internalType": "int24",
-          "name": "tickLower",
-          "type": "int24"
-        },
-        {
-          "indexed": true,
-          "internalType": "int24",
-          "name": "tickUpper",
-          "type": "int24"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint128",
-          "name": "amount",
-          "type": "uint128"
+          "internalType": "address",
+          "name": "recipient",
+          "type": "address"
         },
         {
           "indexed": false,
@@ -38,36 +26,32 @@
           "internalType": "uint256",
           "name": "amount1",
           "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "lpShares",
+          "type": "uint256"
         }
       ],
-      "name": "Burn",
+      "name": "Deposit",
       "type": "event"
     },
-    "topic": "0x0c396cd989a39f4459b5fa1aed6a9a8dcdbc45908acfd67e028cd568da98982c",
+    "contract_address": "0x2e00b08a9131bc663ee80d267b67d2aa220da41d",
     "type": "log",
-    "start_date": "2021-05-04 19:27:00 UTC"
+    "start_date": "2022-04-11 09:40:19 UTC"
   },
   "table": {
     "dataset_name": "<INSERT_DATASET_NAME>",
     "schema": [
       {
         "description": "",
-        "name": "owner",
+        "name": "depositor",
         "type": "STRING"
       },
       {
         "description": "",
-        "name": "tickLower",
-        "type": "STRING"
-      },
-      {
-        "description": "",
-        "name": "tickUpper",
-        "type": "STRING"
-      },
-      {
-        "description": "",
-        "name": "amount",
+        "name": "recipient",
         "type": "STRING"
       },
       {
@@ -79,9 +63,14 @@
         "description": "",
         "name": "amount1",
         "type": "STRING"
+      },
+      {
+        "description": "",
+        "name": "lpShares",
+        "type": "STRING"
       }
     ],
     "table_description": "",
-    "table_name": "<TABLE_PREFIX>_event_Burn"
+    "table_name": "<TABLE_PREFIX>_event_Deposit"
   }
 }
