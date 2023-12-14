@@ -9,7 +9,6 @@ def update_last_block_timestamp(protocol_id, last_block_timestamp, trigger_rule=
         SET last_block_timestamp = TIMESTAMP('{last_block_timestamp}')
         WHERE id = '{protocol_id}'
     """
-    
     return execute_query(
         task_id ='update_last_block_timestamp',
         sql=sql,
@@ -24,7 +23,6 @@ def update_syncing_status(protocol_id, syncing_status, trigger_rule=TriggerRule.
         SET syncing_state = {syncing_status}
         WHERE id = '{protocol_id}'
     """
-    
     return execute_query(
         task_id ='update_syncing_status',
         sql=sql,

@@ -5,7 +5,7 @@ def check_transform(scan_name, protocol_id):
   import os
   from soda.scan import Scan
   
-  config_file = f'include/soda/{protocol_id}_configuration.yml'
+  config_file = f'include/soda/configurations/{protocol_id}_configuration.yml'
 
   if not os.path.exists(config_file):
       yaml_config = f"""

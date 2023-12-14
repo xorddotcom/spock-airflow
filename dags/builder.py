@@ -109,17 +109,16 @@ def builder(protocol_id):
         
         _update_syncing_status = update_syncing_status(
             protocol_id=protocol_id,
-            syncing_status=True,
+            syncing_status=False,
             trigger_rule=TriggerRule.NONE_FAILED
         )
     
-        _start >> _process_timestamps >> _transform >> _check_transform 
-        _check_transform >> _update_last_block_timestamp >> _check_historical_backlog
+        _start >> _process_timestamps >> _transform 
+        _transform >> _update_last_block_timestamp >> _check_historical_backlog
         
         _check_historical_backlog >> [_run_again, _update_syncing_status]
         
-        _run_again >> _finish
-        _update_syncing_status >> _finish
+        _update_syncing_status >> _check_transform >> _finish
             
     _protocol_dag = protocol_dag()
 
