@@ -67,7 +67,7 @@ def builder(protocol_id):
             profile_config=DBT_CONFIG,
             render_config=RenderConfig(
                 load_method=LoadMode.DBT_LS,
-                select=[f'path:models/{protocol_id}/transform']
+                select=[f'path:models/protocol_positions/{protocol_id}/transform']
             ),
             execution_config=ExecutionConfig(
                 dbt_executable_path=f"{os.environ['AIRFLOW_HOME']}/dbt_venv/bin/dbt",
