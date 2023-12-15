@@ -22,14 +22,14 @@ from cosmos.constants import LoadMode
 def process_timestamps(**kwargs):
     last_block_timestamp_str = kwargs['dag_run'].conf.get('last_block_timestamp')
     
-    last_block_timestamp = datetime.strptime(last_block_timestamp_str, '%Y-%m-%d %H:%M:%S')
+    last_block_timestamp = datetime.strptime(last_block_timestamp_str.strip("'"), '%Y-%m-%d %H:%M:%S %Z')
     next_block_timestamp = last_block_timestamp.replace(hour=0, minute=0, second=0, microsecond=0) + timedelta(days=1)
     
     print("last_block_timestamp: ", last_block_timestamp)
     print("next_block_timestamp: ", next_block_timestamp)
     
-    push_to_xcom(key='last_block_timestamp', data=last_block_timestamp.strftime('%Y-%m-%d %H:%M:%S'), **kwargs)
-    push_to_xcom(key='next_block_timestamp', data=next_block_timestamp.strftime('%Y-%m-%d %H:%M:%S'), **kwargs)
+    push_to_xcom(key='last_block_timestamp', data=last_block_timestamp.strftime('%Y-%m-%d %H:%M:%S %Z'), **kwargs)
+    push_to_xcom(key='next_block_timestamp', data=next_block_timestamp.strftime('%Y-%m-%d %H:%M:%S %Z'), **kwargs)
     
 
 def builder(protocol_id):
@@ -67,7 +67,7 @@ def builder(protocol_id):
             profile_config=DBT_CONFIG,
             render_config=RenderConfig(
                 load_method=LoadMode.DBT_LS,
-                select=[f'path:models/{protocol_id}/transform']
+                select=[f'path:models/protocol_positions/{protocol_id}/transform']
             ),
             execution_config=ExecutionConfig(
                 dbt_executable_path=f"{os.environ['AIRFLOW_HOME']}/dbt_venv/bin/dbt",

@@ -8,7 +8,6 @@ from airflow.decorators import dag
 from airflow.utils.task_group import TaskGroup
 from airflow.operators.empty import EmptyOperator
 
-
 @dag(
     dag_id='operator',
     schedule_interval="@daily",

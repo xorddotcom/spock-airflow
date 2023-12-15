@@ -6,8 +6,10 @@ from airflow.utils.trigger_rule import TriggerRule
 
 PROTOCOL_METADATA_SCHEMA = [
     {'name': 'id', 'type': 'STRING', 'mode': 'REQUIRED'},
-    {'name': 'last_synced', 'type': 'TIMESTAMP', 'mode': 'NULLABLE'},
-    {'name': 'utility_hash', 'type': 'STRING', 'mode': 'NULLABLE'}
+    {'name': 'last_block_timestamp', 'type': 'TIMESTAMP', 'mode': 'NULLABLE'},
+    {'name': 'utility_hash', 'type': 'STRING', 'mode': 'NULLABLE'},
+    {'name': 'syncing_status', 'type': 'BOOLEAN', 'mode': 'NULLABLE'},
+    {'name': 'created_at', 'type': 'TIMESTAMP', 'mode': 'NULLABLE'}
 ]
 
 raw_data_view_sql = f"""
