@@ -27,7 +27,7 @@ def calculate_utility_hash(protocol_id):
         
         return content
     
-    parser_content = load_files_content('parser')
+    parser_content = load_files_content('parse')
     sql_content = load_files_content('sql')
     combined_content = parser_content + sql_content
 
@@ -37,7 +37,7 @@ def calculate_utility_hash(protocol_id):
 #get the earliest time from protocol's all parsers
 def find_earliest_start_date(protocol_id):
     earliest_date = None
-    parser_dir = os.path.join(PROTOCOLS_PATH, protocol_id, 'parser')
+    parser_dir = os.path.join(PROTOCOLS_PATH, protocol_id, 'parse')
 
     for filename in os.listdir(parser_dir):
         data = load_json_file(os.path.join(parser_dir, filename))
@@ -79,8 +79,9 @@ def check_metadata(protocol_id, **kwargs):
 
     computed_hash = calculate_utility_hash(protocol_id)
     last_block_timestamp = fetched_metadata["last_block_timestamp"] if fetched_metadata else find_earliest_start_date(protocol_id)
+    syncing_status = fetched_metadata["syncing_status"] if fetched_metadata else False
 
-    data = {"computed_hash":computed_hash, "last_block_timestamp":last_block_timestamp}
+    data = {"computed_hash":computed_hash, "last_block_timestamp":last_block_timestamp, "syncing_status":syncing_status}
     push_to_xcom(key="protocol_metadata", data=data, **kwargs)
 
     if fetched_metadata:

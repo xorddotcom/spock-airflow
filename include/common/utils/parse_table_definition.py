@@ -36,7 +36,7 @@ def decode_parser(dataset_id, file_path):
             )
 
 def generate_parser_udfs_sql(protocol_id):
-    parser_directory = os.path.join(PROTOCOLS_PATH, protocol_id, 'parser')
+    parser_directory = os.path.join(PROTOCOLS_PATH, protocol_id, 'parse')
     dataset_id = f"p_{protocol_id}"
     sql = ''
 
