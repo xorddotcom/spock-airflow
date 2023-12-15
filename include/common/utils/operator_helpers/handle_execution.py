@@ -14,9 +14,9 @@ def check(protocol_id, **kwargs):
     is_syncing = fetched_metadata["syncing_status"]
     
     if is_syncing:
-        return f'{protocol_id}.handle_execution.run'
-    else:
         return f'{protocol_id}.handle_execution.finish'
+    else:
+        return f'{protocol_id}.handle_execution.run'
     
 # Function to handle protocol execution
 def handle_execution(protocol_id, **kwargs):
