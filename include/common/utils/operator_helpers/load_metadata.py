@@ -1,6 +1,6 @@
 import os
 
-from include.common.constants.index import PROJECT_ID, COMMON_DATASET, PROTOCOL_POSITIONS_PATH
+from include.common.constants.index import PROJECT_ID, COMMON_DATASET, PROTOCOLS_PATH
 from include.common.utils.bigquery import execute_raw_query, create_dataset, execute_query
 from include.common.utils.xcom import push_to_xcom, pull_from_xcom
 from include.common.utils.parse_table_definition import generate_udfs_sql
@@ -17,7 +17,7 @@ from datetime import datetime
 #calculate hash for based on protocol's parser and sql content, to identify change
 def calculate_utility_hash(protocol_id):
     def load_files_content(dir_name):
-        dir_path = os.path.join(PROTOCOL_POSITIONS_PATH, protocol_id, dir_name)
+        dir_path = os.path.join(PROTOCOLS_PATH, protocol_id, dir_name)
         content = ''
         if os.path.exists(dir_path) and os.path.isdir(dir_path):
             for filename in os.listdir(dir_path):
@@ -37,7 +37,7 @@ def calculate_utility_hash(protocol_id):
 #get the earliest time from protocol's all parsers
 def find_earliest_start_date(protocol_id):
     earliest_date = None
-    parser_dir = os.path.join(PROTOCOL_POSITIONS_PATH, protocol_id, 'parser')
+    parser_dir = os.path.join(PROTOCOLS_PATH, protocol_id, 'parser')
 
     for filename in os.listdir(parser_dir):
         data = load_json_file(os.path.join(parser_dir, filename))
