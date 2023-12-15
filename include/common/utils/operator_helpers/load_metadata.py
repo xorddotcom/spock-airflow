@@ -62,7 +62,13 @@ def fetch_metadata(protocol_id, **kwargs):
 
     # get the first item from record
     protocol_record = next(result, None)
-    data = {"last_block_timestamp":protocol_record["last_block_timestamp"], "utility_hash": protocol_record["utility_hash"]} if protocol_record else None
+    
+    data = None
+    if protocol_record:
+        data = {"last_block_timestamp":protocol_record["last_block_timestamp"],
+                "utility_hash": protocol_record["utility_hash"],
+                "syncing_status": protocol_record["syncing_status"]}
+        
     push_to_xcom(key='fetched_metadata', data=data, **kwargs)
 
 #check conditions on metadata

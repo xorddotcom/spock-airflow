@@ -1,11 +1,17 @@
+from include.common.utils.xcom import pull_from_xcom
+
 from airflow.utils.task_group import TaskGroup
 from airflow.operators.empty import EmptyOperator
 from airflow.operators.python import BranchPythonOperator
 from airflow.operators.dagrun_operator import TriggerDagRunOperator
 
 # Function to check if protocol is in syncing state
-def check(protocol_id):
-    is_syncing = True  # Replace with your logic to check syncing state
+def check(protocol_id, **kwargs):
+    fetched_metadata = pull_from_xcom(key='fetched_metadata',
+                        task_ids=f'{protocol_id}.load_metadata.fetch',
+                        **kwargs)
+    
+    is_syncing = fetched_metadata["syncing_status"]
     
     if is_syncing:
         return f'{protocol_id}.handle_execution.run'
