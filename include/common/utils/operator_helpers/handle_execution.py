@@ -7,8 +7,8 @@ from airflow.operators.dagrun_operator import TriggerDagRunOperator
 
 # Function to check if protocol is in syncing state
 def check(protocol_id, **kwargs):
-    fetched_metadata = pull_from_xcom(key='fetched_metadata',
-                        task_ids=f'{protocol_id}.load_metadata.fetch',
+    fetched_metadata = pull_from_xcom(key='protocol_metadata',
+                        task_ids=f'{protocol_id}.load_metadata.check',
                         **kwargs)
     
     is_syncing = fetched_metadata["syncing_status"]

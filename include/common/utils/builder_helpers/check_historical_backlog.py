@@ -1,9 +1,10 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from airflow.operators.python_operator import BranchPythonOperator
+
 
 def compare_dates(last_block_timestamp):
     last_block_timestamp = datetime.strptime(last_block_timestamp, '%Y-%m-%d %H:%M:%S%z')
-    current_timestamp = datetime.now()
+    current_timestamp = datetime.utcnow().replace(tzinfo=timezone.utc)
     
     difference = abs((current_timestamp - last_block_timestamp).days)
    
