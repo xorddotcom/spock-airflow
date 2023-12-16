@@ -15,3 +15,6 @@ include/dbt/logs
 include/dbt/dbt_packages
 include/soda/configurations/*
 include/dbt/.user.yml
+
+dags/position_dags/*
+!dags/position_dags/template_position_dag.py

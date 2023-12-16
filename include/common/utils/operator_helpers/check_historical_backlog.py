@@ -19,7 +19,9 @@ def check_historical_backlog(last_block_timestamp, **kwargs):
         task_id=f'check_historical_backlog',
         python_callable=compare_dates,
         provide_context=True,
-        op_kwargs={'last_block_timestamp': last_block_timestamp},
+        op_kwargs={
+            'last_block_timestamp': last_block_timestamp
+        },
         **kwargs
     ) 
    

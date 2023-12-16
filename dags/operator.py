@@ -19,7 +19,6 @@ def operator():
     _finish = EmptyOperator(task_id="finish", trigger_rule="none_failed")
 
     for protocol_id in PROTOCOLS:
-        
         with TaskGroup(group_id=f'{protocol_id}') as task_group:
             
             _load_metadata = load_metadata(protocol_id=protocol_id)
