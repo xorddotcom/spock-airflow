@@ -19,19 +19,30 @@ from cosmos.config import RenderConfig, ExecutionConfig
 from cosmos.constants import LoadMode
 
 
-def process_timestamps(**kwargs):
+def load_config(**kwargs):
     last_block_timestamp_str = kwargs['dag_run'].conf.get('last_block_timestamp')
+    run_once = kwargs['dag_run'].conf.get('run_once')
     
     last_block_timestamp = datetime.strptime(last_block_timestamp_str.strip("'"), '%Y-%m-%d %H:%M:%S %Z')
     next_block_timestamp = last_block_timestamp.replace(hour=0, minute=0, second=0, microsecond=0) + timedelta(days=1)
+    run_once = True if run_once else False
     
-    print(f"last_block_timestamp: {last_block_timestamp}", f"next_block_timestamp: {next_block_timestamp}")
+    print(
+        f"""
+        {{
+            last_block_timestamp: {last_block_timestamp},
+            next_block_timestamp: {next_block_timestamp},
+            run_once: {run_once},
+        }}
+        """                                                                                                                                                                  
+    )
     
     push_to_xcom(
-        key='timestamps',
+        key='config',
         data={
             "last_block_timestamp": last_block_timestamp.strftime('%Y-%m-%d %H:%M:%S %Z'),
-            "next_block_timestamp": next_block_timestamp.strftime('%Y-%m-%d %H:%M:%S %Z')
+            "next_block_timestamp": next_block_timestamp.strftime('%Y-%m-%d %H:%M:%S %Z'),
+            "run_once": run_once
         },
         **kwargs
     )
@@ -57,14 +68,15 @@ def protocol_dag():
         on_success_callback=notify_success
     )
     
-    _process_timestamps = PythonOperator(
-        task_id='process_timestamps',
-        python_callable=process_timestamps,
+    _load_config = PythonOperator(
+        task_id='load_config',
+        python_callable=load_config,
         provide_context=True
     )
     
-    last_block_timestamp = "{{ ti.xcom_pull(task_ids='process_timestamps', key='timestamps')['last_block_timestamp'] }}"
-    next_block_timestamp = "{{ ti.xcom_pull(task_ids='process_timestamps', key='timestamps')['next_block_timestamp'] }}"
+    last_block_timestamp = "{{ ti.xcom_pull(task_ids='load_config', key='config')['last_block_timestamp'] }}"
+    next_block_timestamp = "{{ ti.xcom_pull(task_ids='load_config', key='config')['next_block_timestamp'] }}"
+    run_once = "{{ ti.xcom_pull(task_ids='load_config', key='config')['run_once'] }}"
 
     _transform = DbtTaskGroup(
         group_id='transform',
@@ -98,6 +110,7 @@ def protocol_dag():
         
         _check_historical_backlog = check_historical_backlog(
             last_block_timestamp=next_block_timestamp,
+            run_once=run_once,
             options=["run_again", "parallel_task_group_2"]
         )
         
@@ -122,7 +135,7 @@ def protocol_dag():
         }
     )
 
-    _start >> _process_timestamps >> _transform 
+    _start >> _load_config >> _transform 
     _transform >> parallel_task_group_1
 
     _check_historical_backlog >> [_run_again, parallel_task_group_2]
