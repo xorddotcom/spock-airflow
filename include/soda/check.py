@@ -33,7 +33,7 @@ soda_cloud:
   scan.set_verbose()
   scan.add_configuration_yaml_file(config_file)
   scan.set_data_source_name(protocol_id)
-  scan.add_sodacl_yaml_files(f'include/dbt/models/{protocol_id}/check')
+  scan.add_sodacl_yaml_files(f'include/dbt/models/protocol_positions/{protocol_id}/check')
   scan.set_scan_definition_name(scan_name)
 
   result = scan.execute()
