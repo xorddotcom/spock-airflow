@@ -1,15 +1,16 @@
-from airflow.providers.google.cloud.operators.bigquery import BigQueryCreateEmptyDatasetOperator, BigQueryExecuteQueryOperator, BigQueryCreateEmptyTableOperator
-
 from include.common.constants.index import GCP_CONN_ID
+
+from airflow.providers.google.cloud.operators.bigquery import BigQueryCreateEmptyDatasetOperator, BigQueryExecuteQueryOperator, BigQueryCreateEmptyTableOperator
+from google.cloud import bigquery
 
 def create_dataset(task_id, dataset_id, **kwargs):
     return BigQueryCreateEmptyDatasetOperator(
-            task_id = task_id,
-            dataset_id = dataset_id,
-            gcp_conn_id = GCP_CONN_ID,
-            if_exists = 'skip',
-            **kwargs
-        )
+        task_id = task_id,
+        dataset_id = dataset_id,
+        gcp_conn_id = GCP_CONN_ID,
+        if_exists = 'skip',
+        **kwargs
+    )
 
 def execute_query(task_id, sql, **kwargs):
     return BigQueryExecuteQueryOperator(
@@ -19,7 +20,6 @@ def execute_query(task_id, sql, **kwargs):
         gcp_conn_id = GCP_CONN_ID,
         **kwargs
     )
-
 
 def create_table(task_id, dataset_id, table_id, table_schema, **kwargs):
     return BigQueryCreateEmptyTableOperator(
@@ -31,3 +31,10 @@ def create_table(task_id, dataset_id, table_id, table_schema, **kwargs):
         exists_ok= True,
         **kwargs
     )
+
+def execute_raw_query(sql):
+    client = bigquery.Client()
+    query_job = client.query(sql)
+    results = query_job.result()
+    return results
+

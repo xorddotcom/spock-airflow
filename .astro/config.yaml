@@ -1,2 +1,4 @@
 project:
   name: spock-airflow
+postgres:
+  port: 5435

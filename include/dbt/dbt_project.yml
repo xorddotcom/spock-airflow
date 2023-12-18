@@ -1,5 +1,5 @@
-name: 'protocol_positions'
-profile: 'protocol_positions'
+name: "protocol_positions"
+profile: "protocol_positions"
 
 models:
   protocol_positions:

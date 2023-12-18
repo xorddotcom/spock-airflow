@@ -1,19 +1,9 @@
 import json
 import os
 
-from include.common.constants.index import PROJECT_ID, PROTOCOL_POSITIONS_PATH
+from include.common.constants.index import PROJECT_ID, PROTOCOLS_PATH
 from include.common.utils.file_helpers import load_json_file
-
-def generate_parsers_udf_sql(project):
-    parser_directory = os.path.join(PROTOCOL_POSITIONS_PATH, project, 'parser')
-    dataset_id = f"p_{project}"
-    sql = ''
-
-    for filename in os.listdir(parser_directory):
-        parser_file_path = os.path.join(parser_directory,filename)
-        sql += decode_parser(dataset_id=dataset_id,file_path=parser_file_path)
-
-    return sql
+from include.common.utils.template import get_common_sql_template, get_sql_template
 
 def decode_parser(dataset_id, file_path):
     parser_data = load_json_file(file_path)
@@ -26,53 +16,52 @@ def decode_parser(dataset_id, file_path):
     parser_schema = ', '.join([ f"{column['name']} {column['type']}" for column in parser_data['table']['schema']])
 
     if(parser_type == 'log'):
-        return decode_log_udf(dataset_id=dataset_id, abi=formatted_abi, schema=parser_schema, name=parser_name)
+        return get_common_sql_template(
+                file_name='parse_logs_udf',
+                project_id=PROJECT_ID,
+                dataset_id=dataset_id,
+                udf_name=parser_name,
+                abi=formatted_abi,
+                struct_fields=parser_schema
+            )
     else:
-        return decode_trace_udf(dataset_id=dataset_id, abi=formatted_abi, schema=parser_schema, name=parser_name)
+        #TODO need to create trace udf sql
+        return get_common_sql_template(
+                file_name='parse_traces_udf',
+                project_id=PROJECT_ID,
+                dataset_id=dataset_id,
+                udf_name=parser_name,
+                abi=formatted_abi,
+                struct_fields=parser_schema
+            )
 
-def decode_log_udf(dataset_id, abi, schema, name):
-    return  f"""
-        CREATE OR REPLACE FUNCTION 
-        `{PROJECT_ID}.{dataset_id}.decode_{name}` (log_data STRING, topics ARRAY<STRING>)
-        RETURNS STRUCT<{schema}>
-        LANGUAGE js
-        OPTIONS (library=["gs://blockchain-etl-bigquery/ethers.js"]) AS
-        '''
-        var abi = [{abi}]
-        var interface_instance = new ethers.utils.Interface(abi);
-        try {{
-           var parsedLog = interface_instance.parseLog({{topics: topics, data: log_data}});
-        }}
-        catch (e) {{
-            return null;
-        }}
+def generate_parser_udfs_sql(protocol_id):
+    parser_directory = os.path.join(PROTOCOLS_PATH, protocol_id, 'parse')
+    dataset_id = f"p_{protocol_id}"
+    sql = ''
 
-        var transformParams = function(params, abiInputs) {{
-            var result = {{}};
-            if (params && params.length >= abiInputs.length) {{
-                for (var i = 0; i < abiInputs.length; i++) {{
-                    var paramName = abiInputs[i].name;
-                    var paramValue = params[i];
-                    if (abiInputs[i].type === 'address' && typeof paramValue === 'string') {{
-                        // For consistency all addresses are lower-cased.
-                        paramValue = paramValue.toLowerCase();
-                    }}
-                    if (ethers.utils.Interface.isIndexed(paramValue)) {{
-                        paramValue = paramValue.hash;
-                    }}
-                    if (abiInputs[i].type === 'tuple' && 'components' in abiInputs[i]) {{
-                        paramValue = transformParams(paramValue, abiInputs[i].components)
-                    }}
-                    result[paramName] = paramValue;
-                }}
-            }}
-            return result;
-        }};
+    for filename in os.listdir(parser_directory):
+        parser_file_path = os.path.join(parser_directory,filename)
+        sql += decode_parser(dataset_id=dataset_id,file_path=parser_file_path)
 
-        var result = transformParams(parsedLog.values, abi[0].inputs);
-        return result;
-        ''';
-    """
+    return sql
 
-def decode_trace_udf(dataset_id, abi, schema, name):
-    return  ""
+def generate_custom_udfs_sql(protocol_id):
+    sql_directory = os.path.join(PROTOCOLS_PATH, protocol_id, 'sql')
+    dataset_id = f"p_{protocol_id}"
+    sql = ''
+
+    if os.path.exists(sql_directory) and os.path.isdir(sql_directory):
+        for filename in os.listdir(sql_directory):
+            sql_file_path = os.path.join(sql_directory, filename)
+            sql += get_sql_template(file_path=sql_file_path,
+                project_id=PROJECT_ID,
+                dataset_id=dataset_id
+                )
+        
+    return sql
+
+def generate_udfs_sql(protocol_id):
+    standard_parser_udfs = generate_parser_udfs_sql(protocol_id)
+    custom_udfs = generate_custom_udfs_sql(protocol_id)
+    return standard_parser_udfs + custom_udfs
