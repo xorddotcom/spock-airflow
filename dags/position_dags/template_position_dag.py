@@ -89,25 +89,26 @@ def protocol_dag():
         },
     )
     
-    with TaskGroup(group_id='parallel_tasks_1') as parallel_tasks_1:
-        _update_last_block_timestamp = update_last_block_timestamp(
+    with TaskGroup(group_id='parallel_task_group_1') as parallel_task_group_1:
+        update_last_block_timestamp(
             protocol_id=PROTOCOL_ID,
             last_block_timestamp=next_block_timestamp,
             trigger_rule=TriggerRule.NONE_FAILED
         )
         
         _check_historical_backlog = check_historical_backlog(
-            last_block_timestamp=next_block_timestamp
+            last_block_timestamp=next_block_timestamp,
+            options=["run_again", "parallel_task_group_2"]
         )
         
 
-    with TaskGroup(group_id='parallel_tasks_2') as parallel_tasks_2:
-        _check_transform = check_transform(
+    with TaskGroup(group_id='parallel_task_group_2') as parallel_task_group_2:
+        check_transform(
             scan_name='check_transform',
             protocol_id=PROTOCOL_ID
         )
         
-        _update_syncing_status = update_syncing_status(
+        update_syncing_status(
             protocol_id=PROTOCOL_ID,
             syncing_status=False,
             trigger_rule=TriggerRule.NONE_FAILED
@@ -122,9 +123,9 @@ def protocol_dag():
     )
 
     _start >> _process_timestamps >> _transform 
-    _transform >> parallel_tasks_1
+    _transform >> parallel_task_group_1
 
-    parallel_tasks_1 >> [_run_again, parallel_tasks_2]
-    parallel_tasks_2 >> _finish
+    _check_historical_backlog >> [_run_again, parallel_task_group_2]
+    parallel_task_group_2 >> _finish
         
 protocol_dag()

@@ -11,7 +11,7 @@ from airflow.operators.empty import EmptyOperator
 @dag(
     dag_id='operator',
     schedule_interval="@daily",
-    catchup=False,
+    catchup=True,
     start_date=datetime(2023, 1, 1),
 )
 def operator():
