@@ -40,8 +40,8 @@ def load_config(**kwargs):
     push_to_xcom(
         key='config',
         data={
-            "last_block_timestamp": last_block_timestamp.strftime('%Y-%m-%d %H:%M:%S %Z'),
-            "next_block_timestamp": next_block_timestamp.strftime('%Y-%m-%d %H:%M:%S %Z'),
+            "last_block_timestamp": last_block_timestamp.strftime('%Y-%m-%d %H:%M:%S'),
+            "next_block_timestamp": next_block_timestamp.strftime('%Y-%m-%d %H:%M:%S'),
             "run_once": run_once
         },
         **kwargs
@@ -111,17 +111,17 @@ def protocol_dag():
         _check_historical_backlog = check_historical_backlog(
             last_block_timestamp=next_block_timestamp,
             run_once=run_once,
-            options=["run_again", "parallel_task_group_2"]
+            options=["run_again", ["parallel_task_group_2.check_transform", "parallel_task_group_2.update_syncing_status"]]
         )
         
 
     with TaskGroup(group_id='parallel_task_group_2') as parallel_task_group_2:
-        check_transform(
+        _check_transform = check_transform(
             scan_name='check_transform',
             protocol_id=PROTOCOL_ID
         )
         
-        update_syncing_status(
+        _update_syncing_status = update_syncing_status(
             protocol_id=PROTOCOL_ID,
             syncing_status=False,
             trigger_rule=TriggerRule.NONE_FAILED
@@ -138,7 +138,7 @@ def protocol_dag():
     _start >> _load_config >> _transform 
     _transform >> parallel_task_group_1
 
-    _check_historical_backlog >> [_run_again, parallel_task_group_2]
+    _check_historical_backlog >> [_run_again, _check_transform, _update_syncing_status]
     parallel_task_group_2 >> _finish
         
 protocol_dag()
