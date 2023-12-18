@@ -20,7 +20,17 @@ def builder():
     
     template_src = 'dags/position_dags/template_position_dag.py'
     
-    for protocol_id in PROTOCOLS:
+    protocol_list = PROTOCOLS.copy()  
+    
+    black_list = []  
+    white_list = []  
+
+    # If white_list is not empty: Set protocol_list to white_list.
+    # If black_list is not empty: filter protocol_list to exclude those protocols.
+    # If both are empty: protocol_list remains unchanged.
+    protocol_list = white_list if white_list else [protocol for protocol in protocol_list if protocol not in black_list]
+    
+    for protocol_id in protocol_list:
         template_dest = f'dags/position_dags/{protocol_id}.py'
         
         _generate_dag = generate_dag(

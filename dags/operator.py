@@ -18,7 +18,17 @@ def operator():
     _start = EmptyOperator(task_id="start")
     _finish = EmptyOperator(task_id="finish", trigger_rule="none_failed")
 
-    for protocol_id in PROTOCOLS:
+    protocol_list = PROTOCOLS.copy()  
+    
+    black_list = []  
+    white_list = []  
+
+    # If white_list is not empty: Set protocol_list to white_list.
+    # If black_list is not empty: filter protocol_list to exclude those protocols.
+    # If both are empty: protocol_list remains unchanged.
+    protocol_list = white_list if white_list else [protocol for protocol in protocol_list if protocol not in black_list]
+
+    for protocol_id in protocol_list:
         with TaskGroup(group_id=f'{protocol_id}') as task_group:
             
             _load_metadata = load_metadata(protocol_id=protocol_id)
