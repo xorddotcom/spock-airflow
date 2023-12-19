@@ -1,0 +1,15 @@
+version: 2
+
+sources:
+  - name: common
+    database: spock-main
+
+    tables:
+      - name: ethereum_logs
+      - name: tokens
+
+  - name: uniswap_v3_core_ethereum
+    database: spock-main
+
+    tables:
+      - name: uniswap_v3_core_ethereum_liquidities
