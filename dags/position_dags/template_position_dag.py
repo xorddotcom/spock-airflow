@@ -21,21 +21,25 @@ from cosmos.constants import LoadMode
 
 def load_config(**kwargs):
     last_block_timestamp_str = kwargs['dag_run'].conf.get('last_block_timestamp')
+    next_block_timestamp_str = kwargs['dag_run'].conf.get('next_block_timestamp')
     run_once = kwargs['dag_run'].conf.get('run_once')
     
     last_block_timestamp = datetime.strptime(last_block_timestamp_str.strip("'"), '%Y-%m-%d %H:%M:%S %Z')
-    next_block_timestamp = last_block_timestamp.replace(hour=0, minute=0, second=0, microsecond=0) + timedelta(days=1)
+    
+    if next_block_timestamp_str :
+        next_block_timestamp = datetime.strptime(next_block_timestamp_str.strip("'"), '%Y-%m-%d %H:%M:%S %Z')
+    else:
+        next_block_timestamp = last_block_timestamp.replace(hour=0, minute=0, second=0, microsecond=0) + timedelta(days=1)
+        
     run_once = True if run_once else False
     
-    print(
-        f"""
+    print(f"""
         {{
             last_block_timestamp: {last_block_timestamp},
             next_block_timestamp: {next_block_timestamp},
             run_once: {run_once},
         }}
-        """                                                                                                                                                                  
-    )
+    """)
     
     push_to_xcom(
         key='config',
