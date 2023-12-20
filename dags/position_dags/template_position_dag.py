@@ -23,6 +23,7 @@ def load_config(**kwargs):
     last_block_timestamp_str = kwargs['dag_run'].conf.get('last_block_timestamp')
     next_block_timestamp_str = kwargs['dag_run'].conf.get('next_block_timestamp')
     run_once = kwargs['dag_run'].conf.get('run_once')
+    roll_back = kwargs['dag_run'].conf.get('roll_back')
     
     last_block_timestamp = datetime.strptime(last_block_timestamp_str.strip("'"), '%Y-%m-%d %H:%M:%S %Z')
     
@@ -32,12 +33,14 @@ def load_config(**kwargs):
         next_block_timestamp = last_block_timestamp.replace(hour=0, minute=0, second=0, microsecond=0) + timedelta(days=1)
         
     run_once = True if run_once else False
+    roll_back = True if roll_back else False
     
     print(f"""
         {{
             last_block_timestamp: {last_block_timestamp},
             next_block_timestamp: {next_block_timestamp},
             run_once: {run_once},
+            roll_back: {roll_back},
         }}
     """)
     
@@ -46,7 +49,8 @@ def load_config(**kwargs):
         data={
             "last_block_timestamp": last_block_timestamp.strftime('%Y-%m-%d %H:%M:%S'),
             "next_block_timestamp": next_block_timestamp.strftime('%Y-%m-%d %H:%M:%S'),
-            "run_once": run_once
+            "run_once": run_once,
+            "roll_back": roll_back
         },
         **kwargs
     )
@@ -81,6 +85,7 @@ def protocol_dag():
     last_block_timestamp = "{{ ti.xcom_pull(task_ids='load_config', key='config')['last_block_timestamp'] }}"
     next_block_timestamp = "{{ ti.xcom_pull(task_ids='load_config', key='config')['next_block_timestamp'] }}"
     run_once = "{{ ti.xcom_pull(task_ids='load_config', key='config')['run_once'] }}"
+    roll_back = "{{ ti.xcom_pull(task_ids='load_config', key='config')['roll_back'] }}"
 
     _transform = DbtTaskGroup(
         group_id='transform',
@@ -99,7 +104,8 @@ def protocol_dag():
             "vars": json.dumps(
                 {
                     "last_block_timestamp": f"'{last_block_timestamp}'",
-                    "next_block_timestamp": f"'{next_block_timestamp}'"
+                    "next_block_timestamp": f"'{next_block_timestamp}'",
+                    "roll_back": f"'{roll_back}'"
                 }
             )
         },
