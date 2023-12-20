@@ -1,0 +1,66 @@
+{
+  "parser": {
+    "abi": {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "_tokenA",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "_tokenB",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint24",
+          "name": "_fee",
+          "type": "uint24"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "_vault",
+          "type": "address"
+        }
+      ],
+      "name": "VaultCreated",
+      "type": "event"
+    },
+    "contract_address": "0x4b8e58d252ba251e044ec63125e83172eca5118f",
+    "start_date": "2022-04-11 09:40:19 UTC",
+    "topic": "0xaf0c778584d4b20d9768e68ed24ede73b034bc5747a377a69f1db53ff3933def",
+    "type": "log"
+  },
+  "table": {
+    "dataset_name": "<INSERT_DATASET_NAME>",
+    "schema": [
+      {
+        "description": "",
+        "name": "_tokenA",
+        "type": "STRING"
+      },
+      {
+        "description": "",
+        "name": "_tokenB",
+        "type": "STRING"
+      },
+      {
+        "description": "",
+        "name": "_fee",
+        "type": "STRING"
+      },
+      {
+        "description": "",
+        "name": "_vault",
+        "type": "STRING"
+      }
+    ],
+    "table_description": "",
+    "table_name": "<TABLE_PREFIX>_event_VaultCreated"
+  }
+}

@@ -1,6 +1,10 @@
+import os
+
 from airflow.operators.python import PythonOperator
 
 def generate(template):
+    # print("DAGs folder permissions:", oct(os.stat('/usr/local/airflow/dags/position_dags').st_mode & 0o777))
+
     with open(template['src'], 'r') as file:
         dag = file.read()
     

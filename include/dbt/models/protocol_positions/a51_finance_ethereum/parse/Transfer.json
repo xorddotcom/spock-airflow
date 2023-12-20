@@ -6,61 +6,49 @@
         {
           "indexed": true,
           "internalType": "address",
-          "name": "recipient",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "to",
           "type": "address"
         },
         {
           "indexed": false,
           "internalType": "uint256",
-          "name": "shares",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "amount0",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "amount1",
+          "name": "value",
           "type": "uint256"
         }
       ],
-      "name": "Withdraw",
+      "name": "Transfer",
       "type": "event"
     },
     "contract_address": "0x2e00b08a9131bc663ee80d267b67d2aa220da41d",
-    "topic": "0x02f25270a4d87bea75db541cdfe559334a275b4a233520ed6c0a2429667cca94",
-    "type": "log",
-    "start_date": "2022-04-11 09:40:19 UTC"
+    "topic": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+    "type": "log"
   },
   "table": {
     "dataset_name": "<INSERT_DATASET_NAME>",
     "schema": [
       {
         "description": "",
-        "name": "recipient",
+        "name": "from",
         "type": "STRING"
       },
       {
         "description": "",
-        "name": "shares",
+        "name": "to",
         "type": "STRING"
       },
       {
         "description": "",
-        "name": "amount0",
-        "type": "STRING"
-      },
-      {
-        "description": "",
-        "name": "amount1",
+        "name": "value",
         "type": "STRING"
       }
     ],
     "table_description": "",
-    "table_name": "<TABLE_PREFIX>_event_Withdraw"
+    "table_name": "<TABLE_PREFIX>_event_Transfer"
   }
 }

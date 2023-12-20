@@ -1,10 +1,9 @@
-from datetime import datetime, timedelta
-
 from include.common.constants.index import PROTOCOLS
 from include.common.utils.builder_helpers.generate_dag import generate_dag
 
 from airflow.decorators import dag
 from airflow.operators.empty import EmptyOperator
+from datetime import datetime, timedelta
 
 start_date = datetime.now() + timedelta(seconds=1)
 
@@ -18,7 +17,7 @@ def builder():
     _start = EmptyOperator(task_id="start")
     _finish = EmptyOperator(task_id="finish", trigger_rule="none_failed")
     
-    template_src = 'dags/position_dags/template_position_dag.py'
+    template_src = '/usr/local/airflow/dags/position_dags/template_position_dag.py'
     
     protocol_list = PROTOCOLS.copy()  
     
@@ -29,9 +28,9 @@ def builder():
     # If black_list is not empty: filter protocol_list to exclude those protocols.
     # If both are empty: protocol_list remains unchanged.
     protocol_list = white_list if white_list else [protocol for protocol in protocol_list if protocol not in black_list]
-    
-    for protocol_id in protocol_list:
-        template_dest = f'dags/position_dags/{protocol_id}.py'
+
+    for protocol_id in ['a51_finance_ethereum']:
+        template_dest = f'/usr/local/airflow/dags/position_dags/{protocol_id}.py'
         
         _generate_dag = generate_dag(
             dag_name=protocol_id,

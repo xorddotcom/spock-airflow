@@ -38,6 +38,7 @@
       "type": "event"
     },
     "contract_address": "0x2e00b08a9131bc663ee80d267b67d2aa220da41d",
+    "topic": "0x4e2ca0515ed1aef1395f66b5303bb5d6f1bf9d61a353fa53f73f8ac9973fa9f6",
     "type": "log",
     "start_date": "2022-04-11 09:40:19 UTC"
   },

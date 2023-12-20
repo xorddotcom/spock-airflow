@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: common
+    database: spock-main
+
+    tables:
+      - name: ethereum_logs
