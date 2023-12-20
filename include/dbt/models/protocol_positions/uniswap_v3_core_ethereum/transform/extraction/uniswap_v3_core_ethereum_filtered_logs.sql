@@ -4,6 +4,10 @@
     alias='filtered_logs'
 )}}
 
+{% set last_block_timestamp = 'TIMESTAMP(' + var('last_block_timestamp') + ')' if var('last_block_timestamp') %}
+{% set next_block_timestamp = 'TIMESTAMP(' + var('next_block_timestamp') + ')' if var('next_block_timestamp') %}
+{% set roll_back = var('roll_back') == 'True' if var('roll_back') %}
+
 SELECT 
     * 
 FROM 
@@ -25,6 +29,6 @@ WHERE
         topics[0] = '0x783cca1c0412dd0d695e784568c96da2e9c22ff989357a2e8b1d9b2b4e6b7118'
     )
     AND
-    block_timestamp > TIMESTAMP({{ var("last_block_timestamp") }})
+    block_timestamp > {{ last_block_timestamp }}
     AND
-    block_timestamp <= TIMESTAMP({{ var("next_block_timestamp") }})
+    block_timestamp <= {{ next_block_timestamp }}

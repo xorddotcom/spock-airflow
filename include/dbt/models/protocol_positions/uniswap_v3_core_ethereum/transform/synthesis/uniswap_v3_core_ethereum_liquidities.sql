@@ -5,7 +5,9 @@
     alias='liquidities'
 ) }}
 
-{% if not is_incremental() %}
+{% set roll_back = var('roll_back') == 'True' if var('roll_back') %}
+
+{% if not is_incremental() or roll_back %}
 
     WITH initial_state AS (
         SELECT * FROM {{ ref('uniswap_v3_core_ethereum_liquidities_change') }}
