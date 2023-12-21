@@ -25,10 +25,10 @@ def load_config(**kwargs):
     run_once = kwargs['dag_run'].conf.get('run_once')
     roll_back = kwargs['dag_run'].conf.get('roll_back')
     
-    last_block_timestamp = datetime.strptime(last_block_timestamp_str.strip("'"), '%Y-%m-%d %H:%M:%S %Z')
+    last_block_timestamp = datetime.strptime(last_block_timestamp_str.strip("'"), '%Y-%m-%d %H:%M:%S')
     
     if next_block_timestamp_str :
-        next_block_timestamp = datetime.strptime(next_block_timestamp_str.strip("'"), '%Y-%m-%d %H:%M:%S %Z')
+        next_block_timestamp = datetime.strptime(next_block_timestamp_str.strip("'"), '%Y-%m-%d %H:%M:%S')
     else:
         next_block_timestamp = last_block_timestamp.replace(hour=0, minute=0, second=0, microsecond=0) + timedelta(days=1)
         

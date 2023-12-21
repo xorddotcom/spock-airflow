@@ -42,7 +42,7 @@ def find_earliest_start_date(protocol_id):
     for filename in os.listdir(parser_dir):
         data = load_json_file(os.path.join(parser_dir, filename))
         start_date_str = data["parser"]["start_date"]
-        start_date = datetime.strptime(start_date_str, '%Y-%m-%d %H:%M:%S %Z')
+        start_date = datetime.strptime(start_date_str.replace(" UTC", ''), '%Y-%m-%d %H:%M:%S')
         if earliest_date is None or start_date < earliest_date:
             earliest_date = start_date
 

@@ -1,7 +1,7 @@
 from include.common.constants.index import SLACK_CONN_ID
 from airflow.providers.slack.operators.slack import SlackAPIPostOperator
 
-SLACK_CHANNEL='#spock-jenkins-notifications'
+SLACK_CHANNEL='#spock-jenkins-notification'
 ICON_URL='https://res.cloudinary.com/dalayuyv1/image/upload/v1702479633/download_l0fg4f.png'
 
 def notify_success(context, task_id='notify_success'):

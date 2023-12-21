@@ -13,7 +13,7 @@ def decode_parser(dataset_id, file_path):
     parser_name = f"{parser_abi['name'].lower()}_{parser_type}"
 
     formatted_abi = json.dumps(parser_abi)
-    parser_schema = ', '.join([ f"{column['name']} {column['type']}" for column in parser_data['table']['schema']])
+    parser_schema = ', '.join([ f"`{column['name']}` {column['type']}" for column in parser_data['table']['schema']])
 
     if(parser_type == 'log'):
         return get_common_sql_template(

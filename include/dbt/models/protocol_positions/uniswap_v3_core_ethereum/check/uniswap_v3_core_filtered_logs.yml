@@ -1,5 +1,0 @@
-checks for uniswap_v3_core_filtered_logs:
-  - schema:
-      fail:
-        when required column missing:
-          [last_block_timestamp, next_block_timestamp]
