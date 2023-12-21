@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: uniswap_v3_periphery_ethereum
+    database: spock-main
+
+    tables:
+      - name: uniswap_v3_periphery_ethereum_liquidities
