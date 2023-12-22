@@ -8,13 +8,13 @@ Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
 ![image](https://github.com/xorddotcom/spock-airflow/assets/60582132/84b8c901-365b-479e-a015-95496013e0bf)
 
 ## Configurator Dag
-![image](https://github.com/xorddotcom/spock-airflow/assets/60582132/7f94c6b0-3043-42bd-a08f-f324d42c2de0)
+![image](https://github.com/xorddotcom/spock-airflow/assets/60582132/799676e5-34bd-4536-b531-5931c7ed9145)
 
 ## Builder Dag
 ![image](https://github.com/xorddotcom/spock-airflow/assets/60582132/e98b34b7-5255-407d-821f-7321cf53662c)
 
 ## Operator Dag
-![image](https://github.com/xorddotcom/spock-airflow/assets/60582132/720c97ec-6be1-4858-8684-c49f482fd4d5)
+![image](https://github.com/xorddotcom/spock-airflow/assets/60582132/f76863d6-e3bf-407f-92d3-7b156dc73498)
 
 ## Protocol Dag
 ![image](https://github.com/xorddotcom/spock-airflow/assets/60582132/a0bedd61-0aff-4679-ba3d-94b55a517dd7)
