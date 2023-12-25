@@ -6,4 +6,5 @@ sources:
 
     tables:
       - name: ethereum_logs
+      - name: ethereum_token_transfers
       - name: tokens

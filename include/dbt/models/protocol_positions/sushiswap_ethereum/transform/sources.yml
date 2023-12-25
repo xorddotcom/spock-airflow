@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: sushiswap_ethereum
+    database: spock-main
+
+    tables:
+      - name: sushiswap_ethereum_lp_balances
