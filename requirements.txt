@@ -1,3 +1,6 @@
 # Astro Runtime includes the following pre-installed providers packages: https://docs.astronomer.io/astro/runtime-image-architecture#provider-packages
 astronomer-cosmos==1.2.5
-apache-airflow-providers-slack
+apache-airflow-providers-slack
+web3==6.13.0
+py-solc-x==2.0.2
+eth-utils==2.3.1
