@@ -18,3 +18,5 @@ include/dbt/.user.yml
 
 dags/position_dags/*
 !dags/position_dags/template_position_dag.py
+
+include/dataset

@@ -1,12 +1,11 @@
-from typing import List, Tuple, Any
-
 from include.common.utils.web3.abis.erc20 import erc20_abi
 from include.common.utils.web3.abis.erc20_bytes import erc20_bytes_abi
-from include.common.utils.web3.multicall.call import Call
+from include.common.utils.web3.multicall.call import Call, CallResult
 from include.common.utils.web3.constants import FAILED_TXN_DATA
-from include.common.utils.web3.multicall.types import CallResult
-from include.common.utils.web3.provider import Network
+from include.common.utils.web3.provider import Web3Node
 from include.common.utils.web3.multicall.multicall import Multicall
+
+from typing import List, Tuple, Any
 
 def decode_call(erc20_call:Call, data:str) -> Tuple[Any]:
     try:
@@ -20,8 +19,8 @@ def decode_call(erc20_call:Call, data:str) -> Tuple[Any]:
 def generate_calls(address:str, fragments:List[str]) -> List[Call]:
     return [Call(abi=erc20_abi, address=address, fragment=fragment) for fragment in fragments]
 
-def execute_multi_erc20(calls:List[Call]) -> List[CallResult]:
-    multicall = Multicall(Network.Ethereum)
+def execute_multi_erc20(network:Web3Node, calls:List[Call]) -> List[CallResult]:
+    multicall = Multicall(network)
     result = multicall.raw_execute(calls=calls)
     formatted_result = []
 

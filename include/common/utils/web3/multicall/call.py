@@ -1,9 +1,15 @@
+from include.common.utils.web3.constants import MAX_GAS_LIMIT_WEI
+
 from web3 import Web3
 from eth_abi import abi
-from typing import List, Optional, Tuple, Any
+from typing import List, Optional, Tuple, Any, Union, NewType, TypedDict
 
-from include.common.utils.web3.multicall.types import CallInput, CallStruct
-from include.common.utils.web3.constants import MAX_GAS_LIMIT_WEI
+
+CallInput = NewType('CallInput', List[Union[str, int]])
+
+class CallStruct(TypedDict):
+    target: str
+    callData: str
 
 class Call:
     def __init__(self, abi:object, address:str, fragment:str, call_input:Optional[CallInput] = None) -> None:
@@ -11,11 +17,11 @@ class Call:
         self.address = address
         self.fragment = fragment
         self.call_input = call_input
-        self.contract = Web3().eth.contract(address=Web3.toChecksumAddress(address), abi=abi)
+        self.contract = Web3().eth.contract(address=Web3.to_checksum_address(address), abi=abi)
 
     def encode(self) -> CallStruct:
         return {
-            "target": Web3.toChecksumAddress(self.address),
+            "target": Web3.to_checksum_address(self.address),
             "callData": self.contract.encodeABI(fn_name=self.fragment, args=self.call_input),
             "gasLimit": int(MAX_GAS_LIMIT_WEI)
         }
@@ -35,4 +41,12 @@ class Call:
         
     
     def decode(self, data:str) -> Tuple[Any]:
-        return abi.decode_abi(self.__get_output_types() ,data)
+        return abi.decode(self.__get_output_types() ,data)
+    
+
+class CallResult(TypedDict):
+    call: Call
+    output: Any
+    success: bool
+
+

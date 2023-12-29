@@ -1,10 +1,9 @@
-from typing import List, Optional, Tuple
-
 from include.common.utils.web3.abis.multicall import Multicall_abi
 from include.common.utils.web3.constants import MULTICALL_ADDRESS, FAILED_TXN_DATA
 from include.common.utils.web3.provider import Web3Node
-from include.common.utils.web3.multicall.call import Call
-from include.common.utils.web3.multicall.types import CallResult, CallInput
+from include.common.utils.web3.multicall.call import Call, CallResult, CallInput
+
+from typing import List, Optional, Tuple
 
 class Multicall:
     def __init__(self, network:Web3Node):
