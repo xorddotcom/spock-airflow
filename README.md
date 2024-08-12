@@ -1,6 +1,16 @@
 # Spock Airflow
-Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. 
 
+---
+
+# Spock Airflow ETL Pipeline
+
+Welcome to the Spock Airflow project! This repository contains a complete ETL (Extract, Transform, Load) pipeline designed for data extraction and processing from five major blockchain networks: Ethereum, Optimism, Arbitrum, Fantom, and Polygon. 
+
+Leveraging Apache Airflow, our pipeline automates the entire process of extracting raw blockchain data, transforming it into a structured format, and loading it into a data warehouse or other storage solutions. This setup enables seamless data ingestion and processing across multiple blockchains, making it easier to analyze and integrate decentralized data into your applications.
+
+Whether you're looking to analyze transaction data, monitor smart contracts, or build DeFi dashboards, the Spock Airflow project provides a robust and scalable solution to meet your needs.
+
+---
 ## Components
 ![image](https://github.com/xorddotcom/spock-airflow/assets/60582132/256bf327-396f-4a77-8a1b-462ccdb38412)
 
